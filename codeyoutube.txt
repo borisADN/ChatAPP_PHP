@@ -1,0 +1,53 @@
+session_start();
+include_once "config.php";
+$fname = mysqli_real_escape_string($conn,  $_POST['fname']);
+$lname = mysqli_real_escape_string($conn,  $_POST['lname']);
+$email = mysqli_real_escape_string($conn,  $_POST['email']);
+$password = mysqli_real_escape_string($conn,  $_POST['password']);
+
+if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password)) {
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $sql = mysqli_query($conn, "SELECT email FROM users WHERE email = '{$email}'");
+        if (mysqli_num_rows($sql) > 0) {
+            echo "$email existe deja";
+        } else {
+            if (isset($_FILES['image'])) {
+                $img_name = $_FILES['image']['name'];
+                $img_type = $_FILES['image']['type'];
+                $img_tmp = $_FILES['image']['tmp_name'];
+                $img_explode = explode(' . ', $img_name);
+                $img_ext = end($img_explode);
+                $extensions = ['png', 'jpg', 'jpeg'];
+                if (in_array($img_ext, $extensions) === true) {
+                    $time = time();
+
+                    $new_img_name = $time.$img_name;
+                    if (move_uploaded_file($img_tmp, "images/" . $new_img_name)) {
+                        $status = "ACTIVE";
+                        $random_id = rand(time(), 10000000);
+                        $sql2 = mysqli_query($conn, "INSERT INTO users ( lname) VALUES 'FFF'");
+                        //$sql2 = mysqli_query($conn, "INSERT INTO users (fname, lname, email, password, img, status) VALUES ('{$fname}', '{$lname}', '{$email}', '{$password}', '{$new_img_name}', '{$status}')");
+                        if ($sql2) {
+                            $sql3 = mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
+                            if (mysqli_num_rows($sql3)) {
+                                $row = mysqli_fetch_assoc($sql3);
+                                $_SESSION['unique_id'] = $row['unique_id'];
+                                echo 'Successfully';
+                            }
+                        } else {
+                            echo "failed";
+                        }
+                    }
+
+                  
+                }
+            } else {
+                echo "Choisissez un format d'image valide!";
+            }
+        }
+    } else {
+        echo "$email est invalide!";
+    }
+} else {
+    echo "Tout les champs sont obligatoires";
+}
