@@ -1,5 +1,4 @@
 <?php
-// edemwomagno@gmail.com - 0000
 
 session_start();
 include_once "config.php";

@@ -15,30 +15,12 @@ while ($row = mysqli_fetch_assoc($sql)) {
 
     (strlen($result) > 28) ? $msg = substr($result, 0, 28) . '...' : $msg = $result;
 
-    // ($outgoing_id == $row2['outgoing_msg_id']) ? $you = "vous: " : $you ="";
-    
-
-
-    // $output .= '   <a href="chat.php?user_id=' . $row['unique_id'] . '">
-    //                 <div class="content">
-    //                     <img src="images/' . $row['img'] . '" alt="">
-    //                     <div class="details">
-    //                         <span>' . $row['fname'] . " " . $row['lname'] . '</span>
-    //                         <p>' .$you. $msg . '</p>
-    //                     </div>
-    //                 </div>
-    //                 <div class="status-dot">
-    //                     <i class="fa fa-circle" aria-hidden="true"></i>
-    //                 </div>
-    //             </a>
-    //             ';
     if (isset($row2['outgoing_msg_id']) && $outgoing_id == $row2['outgoing_msg_id']) {
         $you = "vous: ";
     } else {
         $you = "";
     }
     
-    // if (isset($row['unique_id'], $row['img'], $row['fname'], $row['lname'])) {
         $output .= '   <a href="chat.php?user_id=' . $row['unique_id'] . '">
                         <div class="content">
                             <img src="images/' . $row['img'] . '" alt="">

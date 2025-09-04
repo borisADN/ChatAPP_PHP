@@ -2,14 +2,23 @@
 session_start();
 if (isset($_SESSION['unique_id'])) {
     include_once "config.php";
+    // Récupération et échappement des valeurs des champs du formulaire
     $outgoing_id = mysqli_real_escape_string($conn, $_POST['outgoing_id']);
     $incoming_id = mysqli_real_escape_string($conn, $_POST['incoming_id']);
     $output = "";
 
+    // $sql = "SELECT * FROM messages 
+    // LEFT JOIN users ON users.unique_id = messages.incoming_msg_id
+    //  WHERE (outgoing_msg_id = {$outgoing_id} AND incoming_msg_id = {$incoming_id})
+    // OR (outgoing_msg_id = {$incoming_id} AND incoming_msg_id = {$outgoing_id}) ORDER BY msg_id ASC";
+
+    //https://sql.sh/cours/jointures/left-join
+    
     $sql = "SELECT * FROM messages 
-    LEFT JOIN users ON users.unique_id = messages.incoming_msg_id
-     WHERE (outgoing_msg_id = {$outgoing_id} AND incoming_msg_id = {$incoming_id})
-    OR (outgoing_msg_id = {$incoming_id} AND incoming_msg_id = {$outgoing_id}) ORDER BY msg_id ASC";
+LEFT JOIN users ON users.unique_id = messages.outgoing_msg_id
+WHERE (outgoing_msg_id = {$outgoing_id} AND incoming_msg_id = {$incoming_id})
+   OR (outgoing_msg_id = {$incoming_id} AND incoming_msg_id = {$outgoing_id})
+ORDER BY msg_id ASC";
 
 
     $query = mysqli_query($conn, $sql);
@@ -25,7 +34,7 @@ if (isset($_SESSION['unique_id'])) {
                                      </div>';
                 
             }else{
- $output .= '<div class="chat incoming">
+                $output .= '<div class="chat incoming">
                      <img src="images/'.$row['img'].'" alt>
                      <div class="details">
                      <p>'.$row['msg'].'</p>
